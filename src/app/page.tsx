@@ -2,9 +2,12 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import SearchBar from "./components/search/search";
+import ProductCard from "./components/ProductCard";
+import Header from "./components/Header";
+import ToastTest from "./components/ToastTest";
+import { Product } from "@/types/cart";
 
-const featuredProducts = [
+const featuredProducts: Product[] = [
   {
     id: 1,
     name: "Baby Frock",
@@ -42,22 +45,13 @@ const featuredProducts = [
 export default function HomePage() {
   return (
     <main className="min-h-screen bg-white text-gray-800">
-      <header className="flex items-center justify-between p-4 border-b shadow-sm gap-4 flex-wrap bg-slate-100">
-        {/* Logo */}
-        <h1 className="text-2xl font-bold text-blue-800">Kuttush</h1>
-
-        {/* SearchBar */}
-        <div className="flex-1 min-w-[200px] max-w-[500px] mx-auto">
-          <SearchBar />
-        </div>
-
-        {/* Navigation */}
-        <nav className="flex items-center gap-4 text-sm text-gray-700">
-          <Link href="/products" className="hover:text-blue-700 font-medium">Products</Link>
-          <Link href="/auth/login" className="hover:text-blue-700 font-medium">Login</Link>
-          <Link href="/auth/register" className="hover:text-blue-700 font-medium">Register</Link>
-        </nav>
-      </header>
+      <Header />
+      
+      {/* Toast Test Component - Remove this after testing */}
+      <div className="bg-yellow-100 border border-yellow-400 p-4 text-center">
+        <p className="text-sm text-yellow-800 mb-2">Test the toast notifications:</p>
+        <ToastTest />
+      </div>
 
       {/* Hero + Search public/images/banners/banner.jpg */}
       <section className="bg-gray-50 py-16 text-center px-4">
@@ -99,19 +93,7 @@ export default function HomePage() {
         <h3 className="text-2xl font-semibold mb-6">Featured Products</h3>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-6">
           {featuredProducts.map((product) => (
-            <div key={product.id} className="p-4 bg-white border rounded-xl shadow hover:shadow-md">
-              <Image
-                src={product.imageUrl}
-                alt={product.name}
-                width={300}
-                height={200}
-                className="w-full h-32 object-cover rounded mb-2"
-              />
-              <h4 className="text-md font-semibold">{product.name}</h4>
-              <p className="text-sm text-gray-600">MOQ: {product.minOrderQuantity}</p>
-              <p className="text-lg text-blue-700 font-bold">৳{product.price}</p>
-              <p className="text-xs text-gray-500">{product.companyName}</p>
-            </div>
+            <ProductCard key={product.id} product={product} />
           ))}
         </div>
       </section>
