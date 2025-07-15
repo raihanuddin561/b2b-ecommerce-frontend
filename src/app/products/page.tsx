@@ -16,7 +16,13 @@ export default function ProductsPage() {
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 50000]);
   const [currentPage, setCurrentPage] = useState<number>(1);
   const [showFilters, setShowFilters] = useState<boolean>(false);
+  const [isClient, setIsClient] = useState<boolean>(false);
   const productsPerPage = 12;
+
+  // Fix hydration by ensuring client-side rendering
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   // Filter and sort products
   useEffect(() => {
@@ -49,7 +55,7 @@ export default function ProductsPage() {
         case 'rating':
           return (b.rating || 0) - (a.rating || 0);
         case 'newest':
-          return new Date(b.createdAt || '').getTime() - new Date(a.createdAt || '').getTime();
+          return new Date(b.createdAt || '2024-01-01').getTime() - new Date(a.createdAt || '2024-01-01').getTime();
         default:
           return 0;
       }
@@ -67,6 +73,18 @@ export default function ProductsPage() {
   const handlePriceRangeChange = (min: number, max: number) => {
     setPriceRange([min, max]);
   };
+
+  // Show loading state during hydration
+  if (!isClient) {
+    return (
+      <main className="min-h-screen bg-gray-50">
+        <Header />
+        <div className="flex items-center justify-center h-96">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+        </div>
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-screen bg-gray-50">

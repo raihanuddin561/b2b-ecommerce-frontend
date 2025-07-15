@@ -3,6 +3,7 @@
 import React, { createContext, useContext, useReducer, useEffect, ReactNode } from 'react';
 import { AuthState, User, LoginCredentials, RegisterData, AuthContextType } from '@/types/auth';
 import { toast } from 'react-toastify';
+import { safeLocalStorage } from '@/utils/localStorage';
 
 // Auth Actions
 type AuthAction =
@@ -60,12 +61,12 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(authReducer, initialState);
 
-  // Load user from localStorage on mount
+  // Load user from localStorage on mount (only on client-side)
   useEffect(() => {
     const loadUser = () => {
       try {
-        const userData = localStorage.getItem('user');
-        const token = localStorage.getItem('token');
+        const userData = safeLocalStorage.getItem('user');
+        const token = safeLocalStorage.getItem('token');
         
         if (userData && token) {
           const user = JSON.parse(userData);
@@ -110,8 +111,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             createdAt: new Date().toISOString()
           };
           
-          localStorage.setItem('user', JSON.stringify(mockUser));
-          localStorage.setItem('token', 'mock-jwt-token');
+          safeLocalStorage.setJSON('user', mockUser);
+          safeLocalStorage.setItem('token', 'mock-jwt-token');
           
           dispatch({ type: 'LOGIN_SUCCESS', payload: mockUser });
           toast.success('Login successful!');
@@ -123,8 +124,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const data = await response.json();
       
       // Store user and token
-      localStorage.setItem('user', JSON.stringify(data.user));
-      localStorage.setItem('token', data.token);
+      safeLocalStorage.setJSON('user', data.user);
+      safeLocalStorage.setItem('token', data.token);
       
       dispatch({ type: 'LOGIN_SUCCESS', payload: data.user });
       toast.success('Login successful!');
@@ -168,8 +169,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           createdAt: new Date().toISOString()
         };
         
-        localStorage.setItem('user', JSON.stringify(mockUser));
-        localStorage.setItem('token', 'mock-jwt-token');
+        safeLocalStorage.setJSON('user', mockUser);
+        safeLocalStorage.setItem('token', 'mock-jwt-token');
         
         dispatch({ type: 'LOGIN_SUCCESS', payload: mockUser });
         toast.success('Registration successful! Please verify your email.');
@@ -179,8 +180,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       const responseData = await response.json();
       
       // Store user and token
-      localStorage.setItem('user', JSON.stringify(responseData.user));
-      localStorage.setItem('token', responseData.token);
+      safeLocalStorage.setJSON('user', responseData.user);
+      safeLocalStorage.setItem('token', responseData.token);
       
       dispatch({ type: 'LOGIN_SUCCESS', payload: responseData.user });
       toast.success('Registration successful!');
@@ -194,8 +195,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Logout function
   const logout = () => {
-    localStorage.removeItem('user');
-    localStorage.removeItem('token');
+    safeLocalStorage.removeItem('user');
+    safeLocalStorage.removeItem('token');
     dispatch({ type: 'LOGOUT' });
     toast.info('Logged out successfully');
   };

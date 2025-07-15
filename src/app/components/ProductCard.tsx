@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
 import { useCart } from '@/contexts/CartContext';
 import { useWishlist } from '@/contexts/WishlistContext';
@@ -16,6 +16,12 @@ export default function ProductCard({ product }: ProductCardProps) {
   const { addToWishlist, removeFromWishlist, isInWishlist } = useWishlist();
   const [quantity, setQuantity] = useState(product.minOrderQuantity);
   const [isAdding, setIsAdding] = useState(false);
+  const [isClient, setIsClient] = useState(false);
+
+  // Fix hydration by ensuring client-side rendering
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
 
   const handleAddToCart = async () => {
     setIsAdding(true);
@@ -56,8 +62,8 @@ export default function ProductCard({ product }: ProductCardProps) {
         className="absolute top-2 right-2 w-8 h-8 bg-white rounded-full shadow-md flex items-center justify-center hover:bg-gray-100 z-10"
       >
         <svg 
-          className={`w-4 h-4 ${isInWishlist(product.id) ? 'text-red-500 fill-current' : 'text-gray-400'}`} 
-          fill={isInWishlist(product.id) ? 'currentColor' : 'none'} 
+          className={`w-4 h-4 ${isClient && isInWishlist(product.id) ? 'text-red-500 fill-current' : 'text-gray-400'}`} 
+          fill={isClient && isInWishlist(product.id) ? 'currentColor' : 'none'} 
           stroke="currentColor" 
           viewBox="0 0 24 24"
         >
@@ -112,7 +118,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       
       {/* Total Price Preview */}
       <p className="text-xs text-gray-500 mt-2 text-center">
-        Total: ৳{(product.price * quantity).toLocaleString()}
+        Total: ৳{isClient ? (product.price * quantity).toLocaleString() : (product.price * product.minOrderQuantity).toLocaleString()}
       </p>
     </div>
   );
