@@ -19,11 +19,10 @@ export default function CartPage() {
 
   const handleProceedToCheckout = () => {
     setIsProcessing(true);
-    // Here you would typically navigate to checkout or process the order
+    // Redirect to checkout page
     setTimeout(() => {
-      alert('Proceeding to checkout... (This would integrate with your checkout process)');
-      setIsProcessing(false);
-    }, 1000);
+      window.location.href = '/checkout';
+    }, 500);
   };
 
   if (items.length === 0) {

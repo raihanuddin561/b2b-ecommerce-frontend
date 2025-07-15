@@ -2,11 +2,24 @@
 
 import Link from 'next/link';
 import { useCart } from '@/contexts/CartContext';
+import NoSSR from './NoSSR';
 
-export default function CartIcon() {
+function CartBadge() {
   const { getTotalItems } = useCart();
   const totalItems = getTotalItems();
 
+  return (
+    <>
+      {totalItems > 0 && (
+        <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center min-w-[20px]">
+          {totalItems > 99 ? '99+' : totalItems}
+        </span>
+      )}
+    </>
+  );
+}
+
+export default function CartIcon() {
   return (
     <Link href="/cart" className="relative hover:text-blue-700 font-medium">
       <div className="flex items-center gap-1">
@@ -28,12 +41,10 @@ export default function CartIcon() {
         
         <span className="hidden sm:inline">Cart</span>
         
-        {/* Badge showing item count */}
-        {totalItems > 0 && (
-          <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center min-w-[20px]">
-            {totalItems > 99 ? '99+' : totalItems}
-          </span>
-        )}
+        {/* Badge showing item count - only render on client */}
+        <NoSSR>
+          <CartBadge />
+        </NoSSR>
       </div>
     </Link>
   );

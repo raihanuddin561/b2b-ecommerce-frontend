@@ -7,6 +7,31 @@ export interface Product {
   minOrderQuantity: number;
   companyName: string;
   imageUrl: string;
+  // Enhanced fields for product pages
+  description?: string;
+  category?: string;
+  subcategory?: string;
+  images?: string[];
+  specifications?: { [key: string]: string };
+  stock?: number;
+  availability?: 'in_stock' | 'out_of_stock' | 'limited';
+  brand?: string;
+  rating?: number;
+  reviews?: number;
+  tags?: string[];
+  companyId?: string;
+  companyLogo?: string;
+  companyLocation?: string;
+  companyVerified?: boolean;
+  discount?: number;
+  bulkPricing?: { quantity: number; price: number }[];
+  leadTime?: string;
+  shippingInfo?: string;
+  returnPolicy?: string;
+  warranty?: string;
+  certifications?: string[];
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface CartItem {
