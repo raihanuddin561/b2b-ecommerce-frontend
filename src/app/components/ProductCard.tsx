@@ -59,7 +59,7 @@ export default function ProductCard({ product }: ProductCardProps) {
       {/* Wishlist Button */}
       <button
         onClick={handleWishlistToggle}
-        className="absolute top-2 right-2 w-8 h-8 bg-white rounded-full shadow-md flex items-center justify-center hover:bg-gray-100 z-10"
+        className="absolute top-2 right-2 w-8 h-8 bg-white rounded-full shadow-md flex items-center justify-center hover:bg-gray-100 z-10 cursor-pointer"
       >
         <svg 
           className={`w-4 h-4 ${isClient && isInWishlist(product.id) ? 'text-red-500 fill-current' : 'text-gray-400'}`} 
@@ -103,7 +103,8 @@ export default function ProductCard({ product }: ProductCardProps) {
           min={product.minOrderQuantity}
           value={quantity}
           onChange={handleQuantityChange}
-          className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-blue-500"
+          className="w-full px-2 py-1 border border-gray-300 rounded text-sm focus:outline-none focus:ring-1 focus:ring-blue-500 cursor-text"
+          suppressHydrationWarning
         />
       </div>
       
@@ -111,7 +112,8 @@ export default function ProductCard({ product }: ProductCardProps) {
       <button
         onClick={handleAddToCart}
         disabled={isAdding}
-        className="w-full bg-blue-600 text-white py-2 px-3 rounded-lg text-sm font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+        className="w-full bg-blue-600 text-white py-2 px-3 rounded-lg text-sm font-medium hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
+        suppressHydrationWarning
       >
         {isAdding ? 'Adding...' : 'Add to Cart'}
       </button>

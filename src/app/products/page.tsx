@@ -108,7 +108,8 @@ export default function ProductsPage() {
                 placeholder="Search products, categories, or companies..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full px-4 py-3 pl-12 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-300"
+                className="w-full px-4 py-3 pl-12 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-300 cursor-text"
+                suppressHydrationWarning
               />
               <svg className="absolute left-4 top-3.5 h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -122,48 +123,56 @@ export default function ProductsPage() {
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Filters Sidebar */}
           <div className="lg:w-1/4">
-            <div className="bg-white rounded-lg shadow p-6 sticky top-4">
+            <div className="bg-white rounded-xl shadow-lg border border-gray-100 p-6 sticky top-4">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-semibold">Filters</h2>
+                <h2 className="text-2xl font-bold text-gray-800">Filters</h2>
                 <button
                   onClick={() => setShowFilters(!showFilters)}
-                  className="lg:hidden text-blue-600 hover:text-blue-700"
+                  className="lg:hidden bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium cursor-pointer"
+                  suppressHydrationWarning
                 >
                   {showFilters ? 'Hide' : 'Show'}
                 </button>
               </div>
 
-              <div className={`space-y-6 ${showFilters ? 'block' : 'hidden lg:block'}`}>
+              <div className={`space-y-8 ${showFilters ? 'block' : 'hidden lg:block'}`}>
                 {/* Category Filter */}
                 <div>
-                  <h3 className="font-semibold mb-3">Categories</h3>
-                  <div className="space-y-2">
-                    <label className="flex items-center">
+                  <h3 className="text-lg font-bold text-gray-800 mb-4 pb-2 border-b border-gray-200">Categories</h3>
+                  <div className="space-y-3">
+                    <label className="flex items-center p-3 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors border border-transparent hover:border-blue-200">
                       <input
                         type="radio"
                         name="category"
                         value="all"
                         checked={selectedCategory === 'all'}
                         onChange={(e) => setSelectedCategory(e.target.value)}
-                        className="mr-2"
+                        className="mr-3 w-4 h-4 text-blue-600 focus:ring-blue-500 focus:ring-2 cursor-pointer"
+                        suppressHydrationWarning
                       />
-                      <span>All Categories</span>
-                      <span className="ml-auto text-sm text-gray-500">({allProducts.length})</span>
+                      <span className="text-base font-semibold text-gray-700 flex-1">All Categories</span>
+                      <span className="bg-blue-100 text-blue-800 text-sm font-medium px-2 py-1 rounded-full">
+                        {allProducts.length}
+                      </span>
                     </label>
                     {categories.map(category => {
                       const count = getProductsByCategory(category.id).length;
                       return (
-                        <label key={category.id} className="flex items-center">
+                        <label key={category.id} className="flex items-center p-3 rounded-lg hover:bg-blue-50 cursor-pointer transition-colors border border-transparent hover:border-blue-200">
                           <input
                             type="radio"
                             name="category"
                             value={category.id}
                             checked={selectedCategory === category.id}
                             onChange={(e) => setSelectedCategory(e.target.value)}
-                            className="mr-2"
+                            className="mr-3 w-4 h-4 text-blue-600 focus:ring-blue-500 focus:ring-2 cursor-pointer"
+                            suppressHydrationWarning
                           />
-                          <span>{category.icon} {category.name}</span>
-                          <span className="ml-auto text-sm text-gray-500">({count})</span>
+                          <span className="text-2xl mr-3">{category.icon}</span>
+                          <span className="text-base font-medium text-gray-700 flex-1">{category.name}</span>
+                          <span className="bg-gray-100 text-gray-600 text-sm font-medium px-2 py-1 rounded-full">
+                            {count}
+                          </span>
                         </label>
                       );
                     })}
@@ -172,42 +181,53 @@ export default function ProductsPage() {
 
                 {/* Price Range Filter */}
                 <div>
-                  <h3 className="font-semibold mb-3">Price Range</h3>
-                  <div className="space-y-3">
-                    <div className="flex gap-2">
-                      <input
-                        type="number"
-                        placeholder="Min"
-                        value={priceRange[0]}
-                        onChange={(e) => handlePriceRangeChange(Number(e.target.value), priceRange[1])}
-                        className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
-                      />
-                      <input
-                        type="number"
-                        placeholder="Max"
-                        value={priceRange[1]}
-                        onChange={(e) => handlePriceRangeChange(priceRange[0], Number(e.target.value))}
-                        className="w-full px-3 py-2 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
-                      />
+                  <h3 className="text-lg font-bold text-gray-800 mb-4 pb-2 border-b border-gray-200">Price Range</h3>
+                  <div className="space-y-4">
+                    <div className="flex gap-3">
+                      <div className="flex-1">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Min Price</label>
+                        <input
+                          type="number"
+                          placeholder="0"
+                          value={priceRange[0]}
+                          onChange={(e) => handlePriceRangeChange(Number(e.target.value), priceRange[1])}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700 font-medium cursor-text"
+                          suppressHydrationWarning
+                        />
+                      </div>
+                      <div className="flex-1">
+                        <label className="block text-sm font-medium text-gray-700 mb-2">Max Price</label>
+                        <input
+                          type="number"
+                          placeholder="50000"
+                          value={priceRange[1]}
+                          onChange={(e) => handlePriceRangeChange(priceRange[0], Number(e.target.value))}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700 font-medium cursor-text"
+                          suppressHydrationWarning
+                        />
+                      </div>
                     </div>
-                    <div className="flex gap-2">
+                    <div className="grid grid-cols-1 gap-2">
                       <button
                         onClick={() => setPriceRange([0, 1000])}
-                        className="px-3 py-1 text-sm border border-gray-300 rounded hover:bg-gray-50"
+                        className="px-4 py-3 text-sm font-medium text-gray-700 bg-gray-50 border border-gray-200 rounded-lg hover:bg-blue-50 hover:text-blue-700 hover:border-blue-300 transition-all cursor-pointer"
+                        suppressHydrationWarning
                       >
                         ৳0 - ৳1,000
                       </button>
                       <button
                         onClick={() => setPriceRange([1000, 5000])}
-                        className="px-3 py-1 text-sm border border-gray-300 rounded hover:bg-gray-50"
+                        className="px-4 py-3 text-sm font-medium text-gray-700 bg-gray-50 border border-gray-200 rounded-lg hover:bg-blue-50 hover:text-blue-700 hover:border-blue-300 transition-all cursor-pointer"
+                        suppressHydrationWarning
                       >
-                        ৳1K - ৳5K
+                        ৳1,000 - ৳5,000
                       </button>
                       <button
                         onClick={() => setPriceRange([5000, 50000])}
-                        className="px-3 py-1 text-sm border border-gray-300 rounded hover:bg-gray-50"
+                        className="px-4 py-3 text-sm font-medium text-gray-700 bg-gray-50 border border-gray-200 rounded-lg hover:bg-blue-50 hover:text-blue-700 hover:border-blue-300 transition-all cursor-pointer"
+                        suppressHydrationWarning
                       >
-                        ৳5K+
+                        ৳5,000+
                       </button>
                     </div>
                   </div>
@@ -221,7 +241,8 @@ export default function ProductsPage() {
                     setPriceRange([0, 50000]);
                     setSortBy('name');
                   }}
-                  className="w-full py-2 text-blue-600 hover:text-blue-700 font-medium border border-blue-200 rounded hover:bg-blue-50"
+                  className="w-full py-3 text-white bg-gradient-to-r from-red-500 to-red-600 hover:from-red-600 hover:to-red-700 font-semibold rounded-lg transition-all shadow-md hover:shadow-lg cursor-pointer"
+                  suppressHydrationWarning
                 >
                   Clear All Filters
                 </button>
@@ -232,25 +253,27 @@ export default function ProductsPage() {
           {/* Products Section */}
           <div className="lg:w-3/4">
             {/* Results Header */}
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8 bg-white rounded-lg shadow-sm border border-gray-100 p-6">
               <div>
-                <h2 className="text-2xl font-semibold mb-2">
+                <h2 className="text-3xl font-bold text-gray-800 mb-2">
                   {selectedCategory === 'all' ? 'All Products' : 
                    categories.find(c => c.id === selectedCategory)?.name || 'Products'}
                 </h2>
-                <p className="text-gray-600">
+                <p className="text-gray-600 font-medium">
                   Showing {startIndex + 1}-{Math.min(startIndex + productsPerPage, filteredProducts.length)} of {filteredProducts.length} products
                 </p>
               </div>
               
               {/* Sort Dropdown */}
               <div className="mt-4 sm:mt-0">
+                <label className="block text-sm font-medium text-gray-700 mb-2">Sort by:</label>
                 <select
                   value={sortBy}
                   onChange={(e) => setSortBy(e.target.value)}
-                  className="px-4 py-2 border border-gray-300 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className="px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent text-gray-700 font-medium bg-white min-w-[200px] cursor-pointer"
+                  suppressHydrationWarning
                 >
-                  <option value="name">Sort by Name</option>
+                  <option value="name">Name (A-Z)</option>
                   <option value="price-low">Price: Low to High</option>
                   <option value="price-high">Price: High to Low</option>
                   <option value="rating">Highest Rated</option>
@@ -261,11 +284,11 @@ export default function ProductsPage() {
 
             {/* Products Grid */}
             {displayedProducts.length === 0 ? (
-              <div className="text-center py-12">
-                <div className="text-gray-400 text-6xl mb-4">🔍</div>
-                <h3 className="text-xl font-semibold mb-2">No products found</h3>
-                <p className="text-gray-600 mb-4">
-                  Try adjusting your search or filter criteria
+              <div className="text-center py-16 bg-white rounded-lg shadow-sm border border-gray-100">
+                <div className="text-gray-300 text-8xl mb-6">🔍</div>
+                <h3 className="text-2xl font-bold text-gray-800 mb-3">No products found</h3>
+                <p className="text-gray-600 mb-6 max-w-md mx-auto">
+                  We couldn't find any products matching your criteria. Try adjusting your search or filter settings.
                 </p>
                 <button
                   onClick={() => {
@@ -273,9 +296,10 @@ export default function ProductsPage() {
                     setSearchQuery('');
                     setPriceRange([0, 50000]);
                   }}
-                  className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                  className="px-8 py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg hover:shadow-xl cursor-pointer"
+                  suppressHydrationWarning
                 >
-                  Clear Filters
+                  Clear All Filters
                 </button>
               </div>
             ) : (
@@ -285,7 +309,7 @@ export default function ProductsPage() {
                     <ProductCard product={product} />
                     <Link
                       href={`/products/${product.id}`}
-                      className="block mt-2 text-blue-600 hover:text-blue-700 text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity"
+                      className="block mt-2 text-blue-600 hover:text-blue-700 text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer"
                     >
                       View Details →
                     </Link>
@@ -297,44 +321,49 @@ export default function ProductsPage() {
             {/* Pagination */}
             {totalPages > 1 && (
               <div className="flex justify-center mt-12">
-                <nav className="flex items-center space-x-2">
-                  <button
-                    onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-                    disabled={currentPage === 1}
-                    className={`px-4 py-2 rounded ${
-                      currentPage === 1 
-                        ? 'bg-gray-200 text-gray-500 cursor-not-allowed' 
-                        : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
-                    }`}
-                  >
-                    Previous
-                  </button>
-                  
-                  {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                <nav className="bg-white rounded-lg shadow-sm border border-gray-100 p-2">
+                  <div className="flex items-center space-x-1">
                     <button
-                      key={page}
-                      onClick={() => setCurrentPage(page)}
-                      className={`px-4 py-2 rounded ${
-                        currentPage === page
-                          ? 'bg-blue-600 text-white'
-                          : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
+                      onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                      disabled={currentPage === 1}
+                      className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                        currentPage === 1 
+                          ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
+                          : 'bg-white text-gray-700 hover:bg-blue-50 hover:text-blue-700 border border-gray-200 cursor-pointer'
                       }`}
+                      suppressHydrationWarning
                     >
-                      {page}
+                      Previous
                     </button>
-                  ))}
-                  
-                  <button
-                    onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
-                    disabled={currentPage === totalPages}
-                    className={`px-4 py-2 rounded ${
-                      currentPage === totalPages 
-                        ? 'bg-gray-200 text-gray-500 cursor-not-allowed' 
-                        : 'bg-white text-gray-700 hover:bg-gray-50 border border-gray-300'
-                    }`}
-                  >
-                    Next
-                  </button>
+                    
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
+                      <button
+                        key={page}
+                        onClick={() => setCurrentPage(page)}
+                        className={`px-4 py-2 rounded-lg font-medium transition-all cursor-pointer ${
+                          currentPage === page
+                            ? 'bg-blue-600 text-white shadow-md'
+                            : 'bg-white text-gray-700 hover:bg-blue-50 hover:text-blue-700 border border-gray-200'
+                        }`}
+                        suppressHydrationWarning
+                      >
+                        {page}
+                      </button>
+                    ))}
+                    
+                    <button
+                      onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                      disabled={currentPage === totalPages}
+                      className={`px-4 py-2 rounded-lg font-medium transition-all ${
+                        currentPage === totalPages 
+                          ? 'bg-gray-100 text-gray-400 cursor-not-allowed' 
+                          : 'bg-white text-gray-700 hover:bg-blue-50 hover:text-blue-700 border border-gray-200 cursor-pointer'
+                      }`}
+                      suppressHydrationWarning
+                    >
+                      Next
+                    </button>
+                  </div>
                 </nav>
               </div>
             )}

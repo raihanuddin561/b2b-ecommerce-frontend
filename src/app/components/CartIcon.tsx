@@ -21,7 +21,7 @@ function CartBadge() {
 
 export default function CartIcon() {
   return (
-    <Link href="/cart" className="relative hover:text-blue-700 font-medium">
+    <Link href="/cart" className="relative hover:text-blue-700 font-medium cursor-pointer">
       <div className="flex items-center gap-1">
         {/* Shopping Cart Icon */}
         <svg 
